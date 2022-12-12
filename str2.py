@@ -1,8 +1,4 @@
 
-
-
-
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -12,14 +8,20 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 
+st.title('LinkedIn User Predictor')
+
+st.subheader('By Abdel Hossain')
+
+
+if  st.button('What is this?') == 1:
+    st.write(' Enter in information about yourself and see whether my model can tell if you are a LinkedIn user or not!')
+
+
 s =pd.read_csv("C:/Users/abdel/Downloads/social.csv", na_values = 'UNKNOWN')
 
 s.isnull().sum()
 
 
-
-st.write(s.head(1))
- 
 #Q2
 def clean_sms(inputvar):
     import numpy as np
@@ -27,7 +29,6 @@ def clean_sms(inputvar):
     return(x)
 toy_f = pd.DataFrame({'toys':['Barbie','AirsoftGun','Pet Rock'], 'Price':[12.34,1,1]})
 clean_sms(toy_f['Price'])
-
 
 
 ss_df = pd.DataFrame({
@@ -74,40 +75,97 @@ pd.DataFrame(confusion_matrix(y_test, y_pred),
             columns=["Predicted negative", "Predicted positive"],
             index=["Actual negative","Actual positive"]).style.background_gradient(cmap="PiYG")
 
+## Income Code 
+num1 = 0;
+inc = st.number_input('Enter Income', 0, 1000000000)
+
+if inc < 10000:
+     num1 = 1
+elif inc >= 10000 and inc < 20000:
+     num1 = 2
+elif inc >= 20000 and inc < 30000:
+     num1 = 3
+elif inc >= 30000 and inc < 40000:
+     num1 = 4
+elif inc >= 40000 and inc < 50000:
+     num1 = 5
+elif inc >= 50000 and inc < 60000:
+     num1 = 6
+elif inc > 70000 and inc < 80000:
+     num1 = 7
+elif inc > 80000 and inc < 90000:
+     num1 = 8
+elif inc >= 90000:
+     num1 = 9
+
+
+# education Code
+num2 = 0;
+educ = st.selectbox("Choose Highest Education level Achieved", 
+              options = ["Grades 1-8 or no formal schooling",
+                         "High school incomplete",
+                       "High school graduate",
+                      "Some college, no degree (includes some community college)",
+                      "Associate degree",
+                      "Bachelor’s degree",
+                      "Some postgraduate, no postgraduate degree (e.g. some graduate school)",
+                      "Postgraduate or professional degree (e.g., MA, MS, PhD, MD, JD)" ])
 
 
 
-num1 = st.slider(label="Enter an Income", 
-          min_value=1,
-          max_value=9,
-          value=7)
-
-num2 = st.slider(label="Enter an Education",
-          min_value=1,
-          max_value=10,
-          value=1)
-
-num3 = st.slider(label="Parent", 
-          min_value=1,
-          max_value=8,
-          value=5)
-
-num4 = st.slider(label="Female?", 
-          min_value=1,
-          max_value=8,
-          value=5)
+if educ == "Grades 1-8 or no formal schooling":
+     num2 = 1
+elif educ == "High school incomplete":
+     num2 = 2
+elif educ == "High school graduate":
+     num2 = 3
+elif educ == "Some college, no degree (includes some community college)":
+     num2 = 4
+elif educ == "Associate degree":
+     num2 = 5
+elif educ == "Bachelor’s degree":
+     num2 = 6
+elif educ == "Some postgraduate, no postgraduate degree (e.g. some graduate school)":
+     num2 = 7
+else:
+    num2 = 8
 
 
-num5 = st.slider(label="Married?", 
-          min_value=1,
-          max_value=8,
-          value=5)
 
-num6 = st.slider(label="Age", 
-          min_value=1,
-          max_value=99,
-          value=5)
 
+## Parent
+num3  = 0
+
+par = st.radio('Are You a Parent?', ['Yes', 'No']);
+
+if par == 'Yes':
+    num3 = 1
+else:
+    num3 = 0 
+
+## Female 
+
+num4 = 0
+
+gen = st.radio('Do you identify as female?', ['Yes', 'No']);
+
+if gen == 'Yes':
+    num4 = 1
+else:
+    num4 = 0 
+
+
+## Marriage
+num5 = 0
+mar = st.radio('Are You Married?', ['Yes','No'])
+
+if mar == 'Yes':
+    num5 = 1
+else:
+    num5 = 0 
+
+## Age 
+num6 = st.number_input('Enter your age (if greater than 98 please put 98)', 0, 98)
 
 person = [num1, num2, num3,num4,num5, num6]
 
@@ -117,5 +175,9 @@ predicted_class = lr.predict([person])
 # Generate probability of positive class (=1)
 probs = lr.predict_proba([person])
 
-st.write((f"Predicted class: {predicted_class[0]}")) # 0=not pro-environment, 1=pro-envronment
-st.write((f"Probability that this person is a linkedin user : {probs[0][1]}")) ## 72.62 percent likeliehood of being a linkedInUser
+if  st.button('Click to see prediction!') == 1:
+    if predicted_class[0] > 0:
+        st.write((f'You are predicted to be a LinkedIn user, the likelihood that you are using LinkedIn is: {round(round(probs[0][1],3)*100,3)} percent'))
+    else:
+        st.write((f'You are predicted to be NOT be a LinkedIn user, the likelihood that you are using LinkedIn is: {round(round(probs[0][1],3)*100,3)} percent'))
+
