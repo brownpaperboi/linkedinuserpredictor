@@ -17,7 +17,7 @@ if  st.button('What is this?') == 1:
     st.write(' Enter in information about yourself and see whether my model can tell if you are a LinkedIn user or not!')
 
 
-s =pd.read_csv("C:/Users/abdel/Downloads/social.csv", na_values = 'UNKNOWN')
+s = pd.read_csv("social.csv", na_values = 'UNKNOWN')
 
 s.isnull().sum()
 
@@ -179,5 +179,4 @@ if  st.button('Click to see prediction!') == 1:
     if predicted_class[0] > 0:
         st.write((f'You are predicted to be a LinkedIn user, the likelihood that you are using LinkedIn is: {round(round(probs[0][1],3)*100,3)} percent'))
     else:
-        st.write((f'You are predicted to be NOT be a LinkedIn user, the likelihood that you are using LinkedIn is: {round(round(probs[0][1],3)*100,3)} percent'))
-
+        st.write((f'You are predicted to be NOT be a LinkedIn user, the likelihood that you are using LinkedIn is {round(round(probs[0][1],3)*100,3)} percent'))
